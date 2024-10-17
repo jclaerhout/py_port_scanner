@@ -152,10 +152,14 @@ def scan_network(network, max_workers=100):
         - The total number of active hosts if any are found.
     """
     active_hosts = []
-    print(f"Scanning network: {network}")
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        for ip in ip_network(network).hosts():
-            executor.submit(ping_host, ip, active_hosts)
+    try:
+        print(f"Scanning network: {network}")
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            for ip in ip_network(network).hosts():
+                executor.submit(ping_host, ip, active_hosts)
+    except KeyboardInterrupt:
+        print("\n Exiting Program!")
+        sys.exit()
 
     if not active_hosts:
         print("No active hosts found.")
